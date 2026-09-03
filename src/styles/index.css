@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Pretendard, "Noto Sans KR", Inter, system-ui, sans-serif;
+  color: #0f172a;
+  background: #f5f7fb;
+  font-synthesis: none;
+  --team-primary: #131e29;
+  --team-secondary: #1a5daa;
+  --team-accent: #e11d48;
+  --team-text: #fff;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input, select, textarea { font: inherit; }
+button, select { cursor: pointer; }
+
+@layer utilities {
+  .bg-app { background: radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--team-primary) 8%, transparent), transparent 28rem), #f5f7fb; }
+  .bg-team { background-color: var(--team-primary); }
+  .bg-team-soft { background-color: color-mix(in srgb, var(--team-primary) 7%, white); }
+  .bg-gradient-team { background-image: linear-gradient(135deg, var(--team-primary), var(--team-secondary)); }
+  .from-team { --tw-gradient-from: var(--team-primary); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(255 255 255 / 0)); }
+  .to-accent { --tw-gradient-to: var(--team-accent); }
+  .text-team { color: var(--team-primary); }
+  .ring-team { --tw-ring-color: color-mix(in srgb, var(--team-primary) 45%, transparent); }
+  .border-team { border-color: var(--team-primary); }
+  .shadow-team { --tw-shadow-color: color-mix(in srgb, var(--team-primary) 22%, transparent); --tw-shadow: var(--tw-shadow-colored); }
+}
+
+@layer components {
+  .card { @apply rounded-3xl border border-slate-200/80 bg-white shadow-sm; }
+  .section-title { @apply mb-4 flex items-center justify-between; }
+  .section-title h2 { @apply text-lg font-black text-slate-900; }
+  .section-title a { @apply flex items-center gap-1 text-xs font-bold text-slate-400; }
+  .section-title svg { @apply h-3.5 w-3.5; }
+  .filter-chip { @apply shrink-0 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-500 transition; }
+  .filter-chip.active { color: white; background: var(--team-primary); border-color: var(--team-primary); }
+  .filter-select { @apply flex shrink-0 items-center gap-1 rounded-xl border border-slate-200 bg-white px-3 text-sm font-bold text-slate-600; }
+  .filter-select select { @apply bg-transparent py-2.5 outline-none; }
+  .form-field { @apply flex flex-col gap-2 text-sm font-bold text-slate-700; }
+  .form-field input, .form-field select, .form-field textarea { @apply w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-normal text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:bg-white; }
+  .detail-item { @apply flex items-start gap-2 text-slate-500; }
+  .detail-item svg { @apply mt-0.5 h-4 w-4 shrink-0; color: var(--team-primary); }
+  .dashboard-title { @apply mb-6 flex items-center gap-2 font-bold text-slate-900; }
+  .dashboard-title svg { @apply h-5 w-5; color: var(--team-primary); }
+  .setting-row { @apply flex w-full items-center justify-between py-4 text-sm font-bold; }
+  .setting-row span { @apply flex items-center gap-2; }
+  .setting-row span:last-child { @apply font-medium text-slate-400; }
+  .setting-row svg { @apply h-4 w-4; }
+  .calendar-arrow { @apply grid h-9 w-9 place-items-center rounded-xl bg-slate-100 text-slate-500 transition hover:bg-slate-200; }
+  .calendar-arrow svg { @apply h-4 w-4; }
+}
