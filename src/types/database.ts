@@ -44,6 +44,16 @@ export interface GameRow extends Record<string, unknown> {
   updated_at: string
 }
 
+export interface AttendanceRecordImageRow extends Record<string, unknown> {
+  id: string
+  attendance_record_id: string
+  user_id: string
+  type: 'photo' | 'ticket'
+  storage_path: string
+  sort_order: number
+  created_at: string
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -63,6 +73,12 @@ export interface Database {
         Row: GameRow
         Insert: Omit<GameRow, 'id' | 'created_at' | 'updated_at'> & { id?: string; created_at?: string; updated_at?: string }
         Update: Partial<Omit<GameRow, 'id' | 'created_at'>>
+        Relationships: []
+      }
+      attendance_record_images: {
+        Row: AttendanceRecordImageRow
+        Insert: Omit<AttendanceRecordImageRow, 'id' | 'created_at'> & { id?: string; created_at?: string }
+        Update: Partial<Pick<AttendanceRecordImageRow, 'sort_order'>>
         Relationships: []
       }
     }

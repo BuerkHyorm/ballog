@@ -5,6 +5,7 @@ import type { TeamId } from '../types/team'
 import type { KboGame } from '../types/game'
 import { getGameById, getGamesByIds } from './gameService'
 import { getTeamOutcome } from '../utils/recordOutcome'
+import { deleteAllRecordImages } from './recordImageService'
 
 const toRecord = (row: AttendanceRecordRow, favoriteTeam: TeamId, game?: KboGame | null): AttendanceRecord => {
   const effectiveRow: AttendanceRecordRow = { ...row, date: game?.date ?? row.date, start_time: game?.time ?? row.start_time, home_team: game?.homeTeam ?? row.home_team, away_team: game?.awayTeam ?? row.away_team, home_score: game?.homeScore ?? row.home_score, away_score: game?.awayScore ?? row.away_score, stadium: game?.stadium ?? row.stadium }
@@ -92,6 +93,7 @@ type DatabaseRecordUpdate = Partial<Omit<AttendanceRecordRow, 'id' | 'user_id' |
 
 export async function deleteRecord(id: string, userId: string) {
   const supabase = getSupabaseClient()
+  await deleteAllRecordImages(id, userId)
   const { error } = await supabase.from('attendance_records').delete().eq('id', id).eq('user_id', userId)
   if (error) throw error
 }

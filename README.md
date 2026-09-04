@@ -20,6 +20,7 @@ Ballog는 직접 관람한 경기를 나만의 기록으로 남기고, 응원팀
 
 - 날짜별 실제 경기 선택과 팀·구장·시작 시간 자동 입력
 - 좌석, 동행인, 한줄평, 별점 기록
+- private Storage 기반 직관 사진·티켓 이미지 첨부
 - 경기별 상세 기록과 시즌별·결과별 목록 조회
 - `game_id`가 없는 과거 수동 기록도 snapshot 정보로 표시
 
@@ -62,6 +63,8 @@ Ballog는 직접 관람한 경기를 나만의 기록으로 남기고, 응원팀
 | `/records/:id` | 직관 기록 상세 |
 | `/calendar` | 월별 직관 캘린더 |
 | `/stats` | 직관 통계 대시보드 |
+| `/stadiums` | KBO 주요 구장 방문 도장깨기 |
+| `/recap`, `/recap/:season` | 시즌별 직관 결산과 공유 카드 |
 | `/profile` | 프로필 및 응원팀 변경 |
 
 ## 데이터 흐름
@@ -77,6 +80,7 @@ flowchart LR
 
 - `games`: collector가 관리하는 공식 경기 일정과 최신 결과
 - `attendance_records`: 좌석, 동행인, 메모, 별점과 경기 snapshot
+- `attendance_record_images`: private Storage 경로와 사진·티켓 메타데이터
 - 연결된 기록은 최신 화면에서 `games`를 우선 사용하고, 수동·과거 기록은 snapshot을 사용합니다.
 - RLS를 통해 사용자는 자신의 profile과 직관 기록만 접근하며, 로그인 사용자는 `games`를 읽기만 할 수 있습니다.
 
@@ -120,6 +124,7 @@ npm run preview
 
 - 새 프로젝트: SQL Editor에서 [`supabase/schema.sql`](./supabase/schema.sql) 실행
 - 기존 프로젝트에 games 추가: [`supabase/migrations/20260902_add_games.sql`](./supabase/migrations/20260902_add_games.sql) 적용
+- 사진·티켓 기능 추가: [`supabase/migrations/20260903_add_record_images.sql`](./supabase/migrations/20260903_add_record_images.sql) 적용
 - 로컬 collector 실행: 서버 전용 환경변수를 현재 셸에 설정한 후 아래 명령 실행
 
 ```bash
@@ -141,11 +146,11 @@ Edge Function 배포와 `SYNC_KBO_SECRET` 설정은 [`KBO 경기 데이터 동�
 - [x] 공식 경기 결과 재동기화
 - [x] 직관 통계 대시보드
 - [x] 월별 직관 캘린더
+- [x] 직관 사진 및 티켓 이미지 첨부
+- [x] 구장 도장깨기
+- [x] 시즌 결산
+- [x] PNG 공유 카드
 - [ ] 사용 권한이 확인된 실제 구단 로고
-- [ ] 직관 사진 및 티켓 이미지 업로드
-- [ ] 구장 도장깨기
-- [ ] 시즌 결산
-- [ ] 공유용 직관 카드
 
 ## Screenshots
 

@@ -18,6 +18,8 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage').then(({ ProfilePage
 const LoginPage = lazy(() => import('./pages/auth/LoginPage').then(({ LoginPage: page }) => ({ default: page })))
 const SignupPage = lazy(() => import('./pages/auth/SignupPage').then(({ SignupPage: page }) => ({ default: page })))
 const TeamSetupPage = lazy(() => import('./pages/auth/TeamSetupPage').then(({ TeamSetupPage: page }) => ({ default: page })))
+const StadiumsPage = lazy(() => import('./pages/StadiumsPage').then(({ StadiumsPage: page }) => ({ default: page })))
+const RecapPage = lazy(() => import('./pages/RecapPage').then(({ RecapPage: page }) => ({ default: page })))
 
 function RouteFallback() {
   return <div className="mx-auto max-w-5xl p-5 md:p-8"><LoadingState label="화면을 준비하는 중..." /></div>
@@ -43,6 +45,9 @@ export default function App() {
           <Route path="records/:id" element={<RecordDetailPage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="stats" element={<StatsPage />} />
+          <Route path="stadiums" element={<StadiumsPage />} />
+          <Route path="recap" element={<RecapPage />} />
+          <Route path="recap/:season" element={<RecapPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Route>

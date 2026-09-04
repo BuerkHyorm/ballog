@@ -1,4 +1,4 @@
-import { Camera, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { teamThemes } from '../../data/teamThemes'
 import type { KboGame } from '../../types/game'
@@ -36,7 +36,6 @@ export function AttendanceDetailsFields({ rating, onRatingChange }: { rating: nu
     <Field label="같이 간 사람"><input name="companion" placeholder="이름을 쉼표로 구분" /></Field>
     <Field label="한줄평" className="sm:col-span-2"><textarea name="memo" rows={3} maxLength={100} placeholder="오늘 경기는 어땠나요?" /></Field>
     <div className="form-field"><span>별점</span><div className="flex min-h-12 items-center gap-1">{[1, 2, 3, 4, 5].map((value) => <button type="button" key={value} onClick={() => onRatingChange(value)} aria-label={`${value}점`}><Star className={`h-7 w-7 ${value <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-200'}`} /></button>)}</div></div>
-    <Field label="사진"><button type="button" disabled className="flex min-h-24 items-center justify-center gap-2 rounded-xl border border-dashed border-slate-300 bg-slate-50 text-sm font-semibold text-slate-400"><Camera className="h-5 w-5" />사진 업로드는 준비 중</button></Field>
   </div></section>
 }
 

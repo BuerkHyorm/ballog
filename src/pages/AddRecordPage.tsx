@@ -11,6 +11,9 @@ import { getGamesByDate } from '../services/gameService'
 import { createRecord } from '../services/recordService'
 import type { KboGame } from '../types/game'
 import type { TeamId } from '../types/team'
+import { RecordImagePicker } from '../components/photos/RecordImagePicker'
+import type { PendingRecordImage } from '../types/recordImage'
+import { uploadRecordImages } from '../services/recordImageService'
 
 export function AddRecordPage() {
   const { user } = useAuth()
@@ -25,6 +28,7 @@ export function AddRecordPage() {
   const [rating, setRating] = useState(5)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [images, setImages] = useState<PendingRecordImage[]>([])
 
   const changeDate = async (event: ChangeEvent<HTMLInputElement>) => {
     const nextDate = event.target.value
@@ -65,7 +69,12 @@ export function AddRecordPage() {
         memo: String(form.get('memo')),
         rating,
       })
-      navigate(`/records/${id}`, { replace: true })
+      let uploadWarning = ''
+      if (images.length) {
+        try { await uploadRecordImages(user.id, id, images) }
+        catch { uploadWarning = '기록은 저장됐지만 일부 이미지를 업로드하지 못했습니다.' }
+      }
+      navigate(`/records/${id}`, { replace: true, state: uploadWarning ? { uploadWarning } : undefined })
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : '기록 저장에 실패했습니다.')
       setSaving(false)
@@ -84,7 +93,8 @@ export function AddRecordPage() {
       {(selectedGame || manualMode) && <RecordGameFields manualMode={manualMode} selectedGame={selectedGame} />}
 
       {(selectedGame || manualMode) && <AttendanceDetailsFields rating={rating} onRatingChange={setRating} />}
+      {(selectedGame || manualMode) && <RecordImagePicker images={images} onChange={setImages} />}
       {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">{error}</p>}
-      <PrimaryButton type="submit" disabled={saving || (!selectedGame && !manualMode)} className="w-full sm:w-auto"><Save className="h-4 w-4" />{saving ? '저장 중...' : '기록 저장하기'}</PrimaryButton></form>
+      <PrimaryButton type="submit" disabled={saving || (!selectedGame && !manualMode)} className="w-full sm:w-auto"><Save className="h-4 w-4" />{saving ? images.length ? '기록 저장 및 이미지 업로드 중...' : '저장 중...' : '기록 저장하기'}</PrimaryButton></form>
   </PageContainer>
 }
