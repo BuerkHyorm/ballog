@@ -85,8 +85,9 @@ export async function updateRecord(id: string, userId: string, input: Partial<Cr
   if (input.companion !== undefined) updates.companion = input.companion || null
   if (input.memo !== undefined) updates.memo = input.memo || null
   if (input.rating !== undefined) updates.rating = input.rating
-  const { error } = await supabase.from('attendance_records').update(updates).eq('id', id).eq('user_id', userId)
+  const { data, error } = await supabase.from('attendance_records').update(updates).eq('id', id).eq('user_id', userId).select('id').maybeSingle()
   if (error) throw error
+  if (!data) throw new Error('수정할 기록을 찾을 수 없거나 접근 권한이 없습니다.')
 }
 
 type DatabaseRecordUpdate = Partial<Omit<AttendanceRecordRow, 'id' | 'user_id' | 'created_at' | 'updated_at'>>

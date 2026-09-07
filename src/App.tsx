@@ -12,6 +12,7 @@ const HomePage = lazy(() => import('./pages/HomePage').then(({ HomePage: page })
 const RecordsPage = lazy(() => import('./pages/RecordsPage').then(({ RecordsPage: page }) => ({ default: page })))
 const AddRecordPage = lazy(() => import('./pages/AddRecordPage').then(({ AddRecordPage: page }) => ({ default: page })))
 const RecordDetailPage = lazy(() => import('./pages/RecordDetailPage').then(({ RecordDetailPage: page }) => ({ default: page })))
+const EditRecordPage = lazy(() => import('./pages/EditRecordPage').then(({ EditRecordPage: page }) => ({ default: page })))
 const CalendarPage = lazy(() => import('./pages/CalendarPage').then(({ CalendarPage: page }) => ({ default: page })))
 const StatsPage = lazy(() => import('./pages/StatsPage').then(({ StatsPage: page }) => ({ default: page })))
 const ProfilePage = lazy(() => import('./pages/ProfilePage').then(({ ProfilePage: page }) => ({ default: page })))
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="records" element={<RecordsPage />} />
           <Route path="records/new" element={<AddRecordPage />} />
           <Route path="records/:id" element={<RecordDetailPage />} />
+          <Route path="records/:id/edit" element={<EditRecordPage />} />
           <Route path="calendar" element={<CalendarPage />} />
           <Route path="stats" element={<StatsPage />} />
           <Route path="stadiums" element={<StadiumsPage />} />

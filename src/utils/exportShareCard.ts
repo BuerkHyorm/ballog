@@ -1,28 +1,9 @@
 import { getTeamTheme } from '../data/teamThemes'
 import type { SeasonRecapShareCardData, ShareCardData } from '../types/share'
 import type { TeamTheme } from '../types/team'
+import { createCanvasBlob, fitCanvasText, loadCanvasImage, SHARE_CARD_FONT as FONT, SHARE_CARD_HEIGHT as HEIGHT, SHARE_CARD_WIDTH as WIDTH } from './share/canvasHelpers'
 
-const WIDTH = 1080
-const HEIGHT = 1350
-const FONT = 'Pretendard, "Noto Sans KR", Inter, sans-serif'
-
-function loadImage(source: string) {
-  return new Promise<HTMLImageElement>((resolve, reject) => {
-    const image = new Image()
-    image.crossOrigin = 'anonymous'
-    image.onload = () => resolve(image); image.onerror = reject; image.src = source
-  })
-}
-
-function canvasBlob(canvas: HTMLCanvasElement) {
-  return new Promise<Blob>((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('이미지 파일을 만들지 못했습니다.')), 'image/png'))
-}
-
-function fitText(context: CanvasRenderingContext2D, text: string, maxWidth: number, initialSize: number, weight = 800, minimumSize = 24) {
-  let size = initialSize
-  do { context.font = `${weight} ${size}px ${FONT}`; size -= 2 } while (context.measureText(text).width > maxWidth && size > minimumSize)
-  return context.measureText(text).width > maxWidth ? `${text.slice(0, Math.max(5, Math.floor(text.length * maxWidth / context.measureText(text).width) - 1))}…` : text
-}
+const fitText = fitCanvasText
 
 function drawBackground(context: CanvasRenderingContext2D, theme: TeamTheme) {
   const gradient = context.createLinearGradient(0, 0, WIDTH, HEIGHT)
@@ -54,7 +35,7 @@ function drawBaseballDecorations(context: CanvasRenderingContext2D) {
 
 async function drawLogo(context: CanvasRenderingContext2D, theme: TeamTheme, recap = false) {
   try {
-    const logo = await loadImage(theme.logoPath)
+    const logo = await loadCanvasImage(theme.logoPath)
     if (recap) {
       context.save(); context.globalAlpha = 0.035; context.drawImage(logo, 355, 380, 620, 620); context.restore()
       context.fillStyle = 'rgba(255,255,255,0.94)'; context.beginPath(); context.roundRect(902, 58, 104, 104, 28); context.fill(); context.drawImage(logo, 919, 75, 70, 70)
@@ -127,7 +108,7 @@ async function drawRecordCard(context: CanvasRenderingContext2D, data: ShareCard
 
 async function drawSeasonRecap(context: CanvasRenderingContext2D, data: SeasonRecapShareCardData, theme: TeamTheme) {
   const recap = data.recap
-  const photos = (await Promise.allSettled((recap.photos ?? []).slice(0, 3).map((photo) => loadImage(photo.url))))
+  const photos = (await Promise.allSettled((recap.photos ?? []).slice(0, 3).map((photo) => loadCanvasImage(photo.url))))
     .flatMap((result) => result.status === 'fulfilled' ? [result.value] : [])
   drawBackground(context, theme)
   if (!photos.length) drawBaseballDecorations(context)
@@ -186,7 +167,7 @@ export async function exportShareCard(data: ShareCardData) {
   if (!context) throw new Error('이 브라우저에서는 이미지 저장을 지원하지 않습니다.')
   if (data.kind === 'season-recap') await drawSeasonRecap(context, data, theme)
   else await drawRecordCard(context, data, theme)
-  const blob = await canvasBlob(canvas)
+  const blob = await createCanvasBlob(canvas)
   const file = new File([blob], `${data.fileName}.png`, { type: 'image/png' })
   if (navigator.canShare?.({ files: [file] })) {
     try { await navigator.share({ files: [file], title: data.title }); return }
